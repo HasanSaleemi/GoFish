@@ -12,7 +12,6 @@ public class GoFishGame {
 			players.add(new Player(name));
 		d = new Deck();
 		d.shuffle();
-
-	} // testsing lol
+	}
 }
 
