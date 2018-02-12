@@ -2,7 +2,16 @@ package gofish_assn;
 
 public class Main {
 	public static void main(String args[]) {
-		Deck d = new Deck();
+		//String[] playerNames = {"Bob", "Bill", "Mary", "Sue", "Joe", "Mark", "Lewis", "William", "Chris", "Gage"};
+		String[] playerNames = {"Bob", "Bill"};
+		GoFishGame newGame = new GoFishGame(playerNames);
+
+		while(!newGame.gameEnded)
+			newGame.DoTurn();
+
+		System.out.println("GAME OVER!");
+
+		/*Deck d = new Deck();
 		d.shuffle();
 
 		Player bob = new Player("Bob");
@@ -15,7 +24,7 @@ public class Main {
 		bob.checkHandForBook();
 		bill.checkHandForBook();
 
-		/*while(d.getSize() > 0 || bob.getHandSize() > 0 || bill.getHandSize() > 0) {
+		while(d.getSize() > 0 || bob.getHandSize() > 0 || bill.getHandSize() > 0) {
 			if (bob.getHandSize() == 0) {
 				if (d.getSize() > 0)
 					bob.addCardToHand(d.dealCard());

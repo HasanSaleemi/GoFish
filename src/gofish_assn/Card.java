@@ -94,7 +94,7 @@ public class Card {
 	/**
 	 * @return Card's rank to string.
 	 */
-	private String rankToString() {
+	public String rankToString() {
 		if(rank == LOW_RANK)
 			return rankNames[0];
 		else if(rank > LOW_RANK && rank <= RANK_DIF)
