@@ -3,12 +3,28 @@ package gofish_assn;
 import java.util.ArrayList;
 
 public class GoFishGame {
-    private ArrayList<Player> players;
+    /**
+     * List of players playing.
+     */
+    public ArrayList<Player> players;
+    /**
+     * The game's deck.
+     */
     private Deck deck;
-    private int turnNum;
+    /**
+     * Amount of rounds that have happened.
+     */
+    private int roundNum;
 
-    boolean gameEnded;
+    /**
+     * Game status.
+     */
+    public boolean gameEnded;
 
+    /**
+     * Makes a new Go Fish game.
+     * @param names String array of the players' names (first player is first in the array).
+     */
     public GoFishGame(String[] names) {
         players = new ArrayList<Player>();
         for(String name : names)
@@ -34,9 +50,13 @@ public class GoFishGame {
             player.checkHandForBook();
         }
         gameEnded = false;
-        turnNum = 0;
+        roundNum = 0;
     }
 
+    /**
+     * Draw a card from the top of the deck and add it to a player's hand.
+     * @param player The player to draw the card for.
+     */
     private void DrawCardForPlayer(Player player){
         if (deck.getSize() > 0) {
             Card draw = deck.dealCard();
@@ -47,11 +67,14 @@ public class GoFishGame {
         }
     }
 
-    public void DoTurn(){
+    /**
+     * Execute a round of the game (all players take turns).
+     */
+    public void DoRound(){
         if(gameEnded)
             return;
 
-        System.out.println("ROUND #" + ++turnNum + " (" + deck.getSize() + ")");
+        System.out.println("ROUND #" + ++roundNum + " (" + deck.getSize() + ")");
         int isEmpty = 0;
 
         for (Player player: players) {
@@ -71,7 +94,7 @@ public class GoFishGame {
                 }
             } else {
                 System.out.println(player.getName().toUpperCase() + "'S TURN");
-                while(true) {
+                while(true) { // while loop to account for a player taking multiple turns.
                     if(player.getHandSize() == 0) {
                         System.out.println("\t" + player.getName() + "'s hand is empty!");
                         DrawCardForPlayer(player);
@@ -100,7 +123,7 @@ public class GoFishGame {
                         System.out.println("\t" + "> " + randomPlayerPicked.getName() + ": " + "Go fish.");
                         DrawCardForPlayer(player);
                         player.checkHandForBook();
-                        break;
+                        break; // wrong guess = turn is over.
                     }
                 }
             }

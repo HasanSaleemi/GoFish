@@ -67,7 +67,7 @@ public class Player {
 	 * @param c The card to remove.
 	 * @return The removed card.
 	 */
-	public Card removeCardFromHand(Card c) {
+	private Card removeCardFromHand(Card c) {
 		Card retCard = null;
 		for(Card check: hand){
 			if(c.equals(check)){

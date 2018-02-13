@@ -20,7 +20,7 @@ public class Card {
 	/**
 	 * The difference between the top rank and the number of special rank cards.
 	 */
-	final static int RANK_DIF = TOP_RANK - rankNames.length + 1;
+	private final static int RANK_DIF = TOP_RANK - rankNames.length + 1;
 
 	/**
 	 * The rank number of the card.
