@@ -71,6 +71,9 @@ public class Deck {
 		return c;
 	}
 
+	/**
+	 * @return The amount of cards in the deck.
+	 */
 	public int getSize(){
 		return deck.size();
 	}
