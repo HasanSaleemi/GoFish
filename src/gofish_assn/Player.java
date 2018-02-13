@@ -1,5 +1,6 @@
 package gofish_assn;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Player {
@@ -124,8 +125,9 @@ public class Player {
 
 	/**
 	 * Checks player's current hand for any pairs of cards. If a pair is found, removes the pair from hand and adds it into the player's collection of books.
+	 * @param output The PrintWriter to write results to.
 	 */
-	public void checkHandForBook(){
+	public void checkHandForBook(PrintWriter output){
 		boolean found = false;
 		int[] theInds = new int[2];
 
@@ -151,8 +153,16 @@ public class Player {
 			hand.remove(theInds[0]);
 			hand.remove(theInds[1] - 1);
 
+			if(output != null){
+				//System.out.println("\t" + name + " booked [" + theBook[0].toString() + ", " + theBook[1].toString() + "].");
+				output.println("\t" + name + " booked [" + theBook[0].toString() + ", " + theBook[1].toString() + "].");
+			}
+
 			checkHandForBook();
 		}
+	}
+	public void checkHandForBook(){
+		checkHandForBook(null);
 	}
 
 	/*

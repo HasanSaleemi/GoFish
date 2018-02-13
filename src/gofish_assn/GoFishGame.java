@@ -1,8 +1,15 @@
 package gofish_assn;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class GoFishGame {
+    /**
+     * List of profanities a player says when their card is discovered.
+     */
+    private static final String[] PROFANITIES = {"fuck", "shit", "asshole"};
     /**
      * List of players playing.
      */
@@ -15,6 +22,14 @@ public class GoFishGame {
      * Amount of rounds that have happened.
      */
     private int roundNum;
+    /**
+     * Output file to write results of game to.
+     */
+    private File outputFile;
+    /**
+     * File writer.
+     */
+    public PrintWriter output;
 
     /**
      * Game status.
@@ -51,6 +66,13 @@ public class GoFishGame {
         }
         gameEnded = false;
         roundNum = 0;
+
+        outputFile = new File("GoFish_results.txt");
+        try{
+            output = new PrintWriter(outputFile);
+        } catch (FileNotFoundException e) {
+            output = null;
+        }
     }
 
     /**
@@ -61,9 +83,11 @@ public class GoFishGame {
         if (deck.getSize() > 0) {
             Card draw = deck.dealCard();
             player.addCardToHand(draw);
-            System.out.println("\t" + player.getName() + " drew " + draw.toString() + ".");
+            //System.out.println("\t" + player.getName() + " drew " + draw.toString() + ".");
+            output.println("\t" + player.getName() + " drew " + draw.toString() + ".");
         } else {
-            System.out.println("\t" + player.getName() + " can't draw from an empty deck!");
+            //System.out.println("\t" + player.getName() + " can't draw from an empty deck!");
+            output.println("\t" + player.getName() + " can't draw from an empty deck!");
         }
     }
 
@@ -74,29 +98,36 @@ public class GoFishGame {
         if(gameEnded)
             return;
 
-        System.out.println("ROUND #" + ++roundNum + " (" + deck.getSize() + ")");
+        roundNum++;
+        //System.out.println("ROUND #" + roundNum + " (" + deck.getSize() + ")");
+        output.println("ROUND #" + roundNum + " (" + deck.getSize() + ")");
         int isEmpty = 0;
 
         for (Player player: players) {
             String extra = "";
             if(player.getHandSize() == 0 && deck.getSize() == 0)
                 extra = extra +" (FINISHED)";
-            System.out.println("\t" + player.getName().toUpperCase() + extra + "\n\t\tHAND = " + "(" + player.getHandSize() + ") " + player.handToString() + "\n\t\tBOOK = " + "(" + player.getBookSize() + ") " + player.bookToString());
+            //System.out.println("\t" + player.getName().toUpperCase() + extra + "\n\t\tHAND = " + "(" + player.getHandSize() + ") " + player.handToString() + "\n\t\tBOOK = " + "(" + player.getBookSize() + ") " + player.bookToString());
+            output.println("\t" + player.getName().toUpperCase() + extra + "\n\t\tHAND = " + "(" + player.getHandSize() + ") " + player.handToString() + "\n\t\tBOOK = " + "(" + player.getBookSize() + ") " + player.bookToString());
         }
-        System.out.println("--------");
+        //System.out.println("--------");
+        output.println("--------");
         for (Player player: players) {
             if(player.getHandSize() == 0){
                 if(deck.getSize() > 0){
-                    System.out.println(player.getName().toUpperCase() + "'S TURN");
+                    //System.out.println(player.getName().toUpperCase() + "'S TURN");
+                    output.println(player.getName().toUpperCase() + "'S TURN");
                     DrawCardForPlayer(player);
                 } else {
                     isEmpty++;
                 }
             } else {
-                System.out.println(player.getName().toUpperCase() + "'S TURN");
+                //System.out.println(player.getName().toUpperCase() + "'S TURN");
+                output.println(player.getName().toUpperCase() + "'S TURN");
                 while(true) { // while loop to account for a player taking multiple turns.
                     if(player.getHandSize() == 0) {
-                        System.out.println("\t" + player.getName() + "'s hand is empty!");
+                        //System.out.println("\t" + player.getName() + "'s hand is empty!");
+                        output.println("\t" + player.getName() + "'s hand is empty!");
                         DrawCardForPlayer(player);
                         break;
                     }
@@ -112,23 +143,28 @@ public class GoFishGame {
                     Player randomPlayerPicked = pickRand.get((int)Math.floor((pickRand.size() - 1) * Math.random() + 0.5));
 
                     Card randCard = player.chooseCardFromHand();
-                    System.out.println("\t" + "> " + player.getName() + ": " + randomPlayerPicked.getName() + ", do you have any " + randCard.rankToString() + "'s?");
+                    //System.out.println("\t" + "> " + player.getName() + ": " + randomPlayerPicked.getName() + ", do you have any " + randCard.rankToString() + "'s?");
+                    output.println("\t" + "> " + player.getName() + ": " + randomPlayerPicked.getName() + ", do you have any " + randCard.rankToString() + "'s?");
                     Card checkForCard = randomPlayerPicked.rankInHand(randCard);
                     if (checkForCard != null) {
-                        System.out.println("\t" + "> " + randomPlayerPicked.getName() + ": " + "fuck");
+                        //System.out.println("\t" + "> " + randomPlayerPicked.getName() + ": " + PROFANITIES[(int)Math.floor((PROFANITIES.length - 1) * Math.random() + 0.5)]);
+                        output.println("\t" + "> " + randomPlayerPicked.getName() + ": " + PROFANITIES[(int)Math.floor((PROFANITIES.length - 1) * Math.random() + 0.5)]);
                         Player.swapCards(randomPlayerPicked, checkForCard, player);
-                        player.checkHandForBook();
-                        System.out.println("\t" + player.getName() + " took " + randomPlayerPicked.getName() + "'s " + checkForCard.toString() + "!");
+                        //System.out.println("\t" + player.getName() + " took " + randomPlayerPicked.getName() + "'s " + checkForCard.toString() + "!");
+                        output.println("\t" + player.getName() + " took " + randomPlayerPicked.getName() + "'s " + checkForCard.toString() + "!");
+                        player.checkHandForBook(output);
                     } else {
-                        System.out.println("\t" + "> " + randomPlayerPicked.getName() + ": " + "Go fish.");
+                        //System.out.println("\t" + "> " + randomPlayerPicked.getName() + ": " + "Go fish.");
+                        output.println("\t" + "> " + randomPlayerPicked.getName() + ": " + "Go fish.");
                         DrawCardForPlayer(player);
-                        player.checkHandForBook();
+                        player.checkHandForBook(output);
                         break; // wrong guess = turn is over.
                     }
                 }
             }
         }
-        System.out.println();
+        //System.out.println();
+        output.println();
 
         if(isEmpty == players.size())
             gameEnded = true;
