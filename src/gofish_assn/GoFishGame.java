@@ -9,7 +9,7 @@ public class GoFishGame {
     /**
      * List of profanities a player says when their card is discovered.
      */
-    private static final String[] PROFANITIES = {"fuck", "shit", "asshole"};
+    private static final String[] PROFANITIES = {"dang", "shoot", "darn"};
     /**
      * List of players playing.
      */
